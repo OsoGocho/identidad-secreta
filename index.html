@@ -13,7 +13,7 @@
     --panel:#ffffff;
     --panel-alt:#fbfbfc;
 
-    --c-yellow:#f5d000;
+    --c-yellow:#dca700;
     --c-green:#00b74a;
     --c-blue:#0066ff;
     --c-orange:#ff4f1a;
@@ -79,13 +79,16 @@
   .character{
     --card:#6b6b6b;
     position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    overflow:hidden;
     gap:clamp(6px,.8vw,10px); min-height:clamp(150px,24vh,260px);
     padding:clamp(14px,1.6vw,20px) clamp(10px,1.2vw,16px);
-    border-radius:14px; border:4px solid var(--card); background:#ffffff;
+    border-radius:20px; border:1px solid var(--line);
+    background:linear-gradient(145deg, #ffffff, #fcfcfd);
+    box-shadow:0 4px 12px rgba(0,0,0,.03), 0 1px 2px rgba(0,0,0,.02);
     text-align:center; color:var(--ink);
-    transition:filter .15s, transform .15s, box-shadow .15s;
+    transition:transform .15s, box-shadow .15s;
   }
-  .character:hover{filter:saturate(1.02); box-shadow:0 4px 10px #00000008}
+  .character:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,.06)}
   .character:active{transform:translateY(1px)}
   .character:focus-visible{outline:2px solid var(--ink); outline-offset:3px}
   .character:nth-child(8n+1){--card:var(--c-yellow)}
@@ -97,15 +100,16 @@
   .character:nth-child(8n+7){--card:var(--c-yellow)}
   .character:nth-child(8n+8){--card:var(--c-green)}
   .number{
-    position:absolute; top:10px; left:12px;
-    font-size:clamp(1.1rem,1.6vw,1.4rem); font-weight:900; line-height:1;
-    color:var(--card);
+    position:absolute; top:0; left:0;
+    font-size:clamp(.9rem,1.2vw,1.1rem); font-weight:800; line-height:1;
+    color:#ffffff; background:var(--card);
+    padding:8px 12px; border-radius:16px 0 16px 0;
   }
   .avatar{
     display:grid; place-items:center; width:clamp(44px,4vw,56px); aspect-ratio:1;
-    border-radius:12px; font-size:clamp(20px,2vw,24px); color:var(--card);
-    background:color-mix(in srgb, var(--card) 12%, #ffffff);
-    border:1px solid color-mix(in srgb, var(--card) 40%, #ffffff);
+    border-radius:14px; font-size:clamp(20px,2vw,24px); color:var(--card);
+    background:color-mix(in srgb, var(--card) 10%, #ffffff);
+    border:1px solid color-mix(in srgb, var(--card) 25%, #ffffff);
   }
   .name{
     font-weight:600; font-size:clamp(1rem,1.6vw,1.5rem); line-height:1.15;
@@ -220,7 +224,7 @@
     .pill{display:none}
     .grid{gap:8px}
     .character{min-height:132px; border-radius:18px; padding:12px 8px; gap:6px}
-    .number{font-size:1.15rem; top:8px; left:10px}
+    .number{font-size:.95rem; top:0; left:0; padding:7px 10px}
     .avatar{width:40px; border-radius:14px; font-size:20px}
     .name{font-size:.95rem}
     .swap{display:none}
