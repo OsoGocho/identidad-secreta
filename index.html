@@ -5,103 +5,272 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Identidad secreta</title>
 <style>
-  :root {
-    --bg: #10131f; --panel: #191e30; --panel2: #202740; --ink: #f4f3ff;
-    --muted: #a7afc9; --accent: #a9f0d1; --accent2: #f7c873; --line: #343d59;
+  :root{
+    --bg:#f7f7f9;
+    --ink:#151515;
+    --muted:#5f5f5f;
+    --line:#d7d7dc;
+    --panel:#ffffff;
+    --panel-alt:#fbfbfc;
+
+    --c-yellow:#f5d000;
+    --c-green:#00b74a;
+    --c-blue:#0066ff;
+    --c-orange:#ff4f1a;
+    --c-pink:#ff2fa6;
+    --c-purple:#6b3dff;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; min-height: 100vh; color: var(--ink);
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
-    background: radial-gradient(ellipse at 15% 0%, #28304e 0%, transparent 38%),
-                radial-gradient(ellipse at 95% 30%, #332746 0%, transparent 32%), var(--bg);
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:#000000;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    background:#f7f7f9;
+    line-height:1.4;
   }
-  .wrap { width: 100%; min-height: 100vh; margin: 0 auto; padding: 22px clamp(14px, 3vw, 42px) 28px; display:flex; flex-direction:column; }
-  header { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:22px; }
-  .brand { display:flex; align-items:center; gap:12px; }
-  .mark { width:44px; height:44px; display:grid; place-items:center; border-radius:14px; color:#10131f; background:var(--accent); font-size:22px; font-weight:900; box-shadow:0 8px 30px #a9f0d133; }
-  h1 { margin:0; font-size:clamp(1.5rem, 4vw, 2.25rem); letter-spacing:-.05em; }
-  .subtitle { color:var(--muted); margin:5px 0 0; font-size:.93rem; }
-  .pill { border:1px solid var(--line); background:#ffffff08; padding:9px 13px; border-radius:999px; color:var(--muted); font-size:.82rem; white-space:nowrap; }
-  .layout { display:block; flex:1; min-height:0; }
-  .panel { background:linear-gradient(145deg,#1c2236ee,#171c2bee); border:1px solid var(--line); border-radius:22px; padding:clamp(14px, 2vw, 28px); box-shadow:0 18px 55px #0002; }
-  .panel h2 { font-size:1.02rem; margin:0 0 8px; letter-spacing:-.02em; }
-  .settings-toggle { display:flex; align-items:center; gap:8px; background:#ffffff09; border:1px solid var(--line); color:var(--ink); padding:10px 14px; border-radius:12px; }
-  .board-panel { min-height:calc(100vh - 125px); display:flex; flex-direction:column; justify-content:center; }
-  .grid { flex:1; align-content:center; grid-template-rows:repeat(2, minmax(190px, 1fr)); gap:clamp(10px, 2vw, 22px); }
-  .character { min-height:clamp(160px, 28vh, 270px); border-radius:22px; box-shadow:0 14px 32px #0002; }
-  .avatar { width:clamp(48px, 5vw, 70px); height:clamp(48px, 5vw, 70px); font-size:clamp(24px, 3vw, 34px); border-radius:20px; }
-  .name { font-size:clamp(1.45rem, 2.8vw, 2.25rem); }
-  dialog { width:min(560px, calc(100vw - 28px)); border:1px solid var(--line); border-radius:22px; background:#191e30; color:var(--ink); padding:24px; box-shadow:0 30px 100px #0009; }
-  dialog::backdrop { background:#050711c9; backdrop-filter:blur(7px); }
-  .dialog-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
-  .dialog-head h2 { margin:0; font-size:1.15rem; }
-  .close-dialog { background:#ffffff0b; border:1px solid var(--line); color:var(--ink); border-radius:10px; padding:8px 11px; }
-  .hint { color:var(--muted); font-size:.86rem; line-height:1.55; margin:0 0 15px; }
-  textarea { width:100%; min-height:185px; resize:vertical; background:#101523; border:1px solid #3a4564; color:var(--ink); border-radius:13px; padding:13px; font:inherit; line-height:1.55; outline:none; }
-  textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px #a9f0d11a; }
-  .buttons { display:flex; gap:9px; flex-wrap:wrap; margin-top:13px; }
-  button { border:0; cursor:pointer; font:inherit; font-weight:750; border-radius:12px; padding:12px 15px; transition:transform .15s, filter .15s; }
-  button:hover { filter:brightness(1.08); transform:translateY(-1px); }
-  button:active { transform:translateY(0); }
-  .primary { flex:1; background:var(--accent); color:#11182a; }
-  .secondary { background:#ffffff0b; border:1px solid var(--line); color:var(--ink); }
-  .status { min-height:40px; margin-top:13px; color:var(--muted); font-size:.84rem; line-height:1.45; }
-  .status.error { color:#ffb2ad; }
-  .board-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:0 0 16px; }
-  .board-head h2 { margin:0; font-size:1.12rem; }
-  .count { color:var(--muted); font-size:.82rem; }
-  .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
-  .character { position:relative; min-height:164px; padding:13px 10px 15px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:10px; border:1px solid #414b6a; border-radius:17px; background:linear-gradient(155deg,#29324d,#20273d); color:var(--ink); overflow:hidden; }
-  .character::before { content:""; position:absolute; inset:0 0 auto; height:4px; background:var(--accent); opacity:.8; }
-  .character:nth-child(2n)::before { background:var(--accent2); }
-  .character:nth-child(3n)::before { background:#c4b5fd; }
-  .character:disabled { cursor:default; opacity:.62; }
-  .number { position:absolute; top:12px; left:12px; font-size:1.5rem; line-height:1; font-weight:900; color:#f4f3ff; background:transparent; border:0; padding:0; border-radius:0; }
-  .avatar { width:49px; height:49px; display:grid; place-items:center; border-radius:16px; background:#ffffff0a; border:1px solid #ffffff16; font-size:24px; }
-  .name { font-weight:800; font-size:clamp(1.45rem, 2.8vw, 2.25rem); line-height:1.2; overflow-wrap:anywhere; }
-  .swap { font-size:.72rem; color:var(--muted); font-weight:550; }
-  .character:not(:disabled):hover { border-color:var(--accent); background:linear-gradient(155deg,#303b59,#252e48); }
-  .empty { grid-column:1/-1; padding:35px 18px; text-align:center; color:var(--muted); border:1px dashed #414b6a; border-radius:16px; line-height:1.6; }
-  .footnote { color:var(--muted); font-size:.8rem; line-height:1.5; margin:17px 0 0; }
-  @media (max-width: 820px) { .grid { gap:9px; grid-template-rows:repeat(2, minmax(150px, 1fr)); } .character { min-height:145px; } .board-panel { min-height:calc(100vh - 110px); } }
-  @media (max-width: 480px) { .wrap { padding:16px 10px 18px; } header { align-items:center; } .brand { gap:8px; } .mark { width:38px; height:38px; } .subtitle { font-size:.78rem; } .settings-toggle { padding:9px 10px; font-size:.82rem; } .panel { padding:12px; } .grid { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(4, minmax(125px, 1fr)); gap:8px; } .character { min-height:125px; padding:12px 8px; } .number { top:8px; left:8px; font-size:1.35rem; } .board-panel { min-height:calc(100vh - 90px); } .board-head { margin-bottom:12px; } }
+  button{font-family:inherit; cursor:pointer; border:0; background:none; color:inherit}
+  .wrap{
+    width:100%; max-width:1400px; min-height:100vh; margin:0 auto;
+    padding:clamp(10px,1.6vw,18px) clamp(12px,2.4vw,28px) clamp(16px,2vw,26px);
+    display:flex; flex-direction:column; gap:clamp(10px,1.2vw,16px);
+  }
+  header{display:flex; flex-direction:column; gap:clamp(8px,1vw,12px)}
+  .topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap}
+
+  .gamebar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    padding:8px 10px; border:1px solid var(--line); border-radius:14px; background:var(--panel);
+  }
+  .gamebar-actions{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+  .primary{
+    display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:999px;
+    font-weight:800; font-size:.88rem; letter-spacing:.01em; color:#151515;
+    background:linear-gradient(#fff7b8,#f5d000); border:1px solid #c9b000;
+    box-shadow:inset 0 1px 0 #ffffffcc;
+    transition:filter .15s, transform .15s;
+  }
+  .primary:hover{filter:brightness(.98)}
+  .primary:active{transform:translateY(1px)}
+  .primary:focus-visible{outline:2px solid var(--ink); outline-offset:2px}
+  .secondary{
+    display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:999px;
+    font-weight:700; font-size:.88rem; color:var(--ink);
+    background:var(--panel); border:1px solid var(--line);
+    transition:background .15s;
+  }
+  .secondary:hover{background:#f3f3f5}
+  .secondary:focus-visible{outline:2px solid var(--ink); outline-offset:2px}
+  .count{
+    font-size:.78rem; color:var(--muted); white-space:nowrap;
+  }
+  main.layout{flex:1; display:flex; min-height:0}
+  .panel{
+    width:100%; display:flex; flex-direction:column; overflow:hidden;
+    border:1px solid #d7d7dc; border-radius:16px; background:#ffffff;
+    box-shadow:0 1px 1px #00000003;
+  }
+  .board-head{display:none}
+  .grid{
+    flex:1; display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:clamp(8px,1vw,12px); padding:clamp(10px,1.2vw,16px);
+    align-content:stretch;
+  }
+  .character{
+    --card:#6b6b6b;
+    position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:clamp(6px,.8vw,10px); min-height:clamp(150px,24vh,260px);
+    padding:clamp(14px,1.6vw,20px) clamp(10px,1.2vw,16px);
+    border-radius:14px; border:4px solid var(--card); background:#ffffff;
+    text-align:center; color:var(--ink);
+    transition:filter .15s, transform .15s, box-shadow .15s;
+  }
+  .character:hover{filter:saturate(1.02); box-shadow:0 4px 10px #00000008}
+  .character:active{transform:translateY(1px)}
+  .character:focus-visible{outline:2px solid var(--ink); outline-offset:3px}
+  .character:nth-child(8n+1){--card:var(--c-yellow)}
+  .character:nth-child(8n+2){--card:var(--c-green)}
+  .character:nth-child(8n+3){--card:var(--c-blue)}
+  .character:nth-child(8n+4){--card:var(--c-orange)}
+  .character:nth-child(8n+5){--card:var(--c-pink)}
+  .character:nth-child(8n+6){--card:var(--c-purple)}
+  .character:nth-child(8n+7){--card:var(--c-yellow)}
+  .character:nth-child(8n+8){--card:var(--c-green)}
+  .number{
+    position:absolute; top:10px; left:12px;
+    font-size:clamp(1.1rem,1.6vw,1.4rem); font-weight:900; line-height:1;
+    color:var(--card);
+  }
+  .avatar{
+    display:grid; place-items:center; width:clamp(44px,4vw,56px); aspect-ratio:1;
+    border-radius:12px; font-size:clamp(20px,2vw,24px); color:var(--card);
+    background:color-mix(in srgb, var(--card) 12%, #ffffff);
+    border:1px solid color-mix(in srgb, var(--card) 40%, #ffffff);
+  }
+  .name{
+    font-weight:600; font-size:clamp(1rem,1.6vw,1.5rem); line-height:1.15;
+    letter-spacing:-.01em; text-wrap:balance; overflow-wrap:anywhere;
+  }
+  .swap{display:none}
+  .empty{
+    grid-column:1/-1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; min-height:clamp(320px,56vh,620px); padding:clamp(20px,4vw,40px);
+    text-align:center; color:var(--muted); border:1px dashed var(--line); border-radius:12px;
+    background:var(--panel-alt); font-size:clamp(.9rem,1vw,1rem); line-height:1.6;
+  }
+  .empty-icon{display:none}
+  .empty strong{color:var(--ink)}
+  .controls{display:none}
+  .status{
+    display:none;
+  }
+  .footnote{display:none}
+    .dialog-body{
+      display:flex; flex-direction:column; gap:14px; padding:clamp(16px,2vw,24px);
+      background-color: #ffffff !important;
+      background-image: none !important;
+      color: #000000 !important;
+      border-radius:16px;
+    }
+  dialog {
+    width:min(680px,calc(100vw - 24px));
+    border:1px solid #c9c9cf;
+    border-radius:16px;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    padding: 0;
+    box-shadow: 0 24px 48px -18px #00000026;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  dialog::backdrop { background: rgba(0,0,0,0.45); }
+  .dialog-head{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .dialog-head h2{margin:0; font-size:clamp(.98rem,1vw,1.02rem); font-weight:800; letter-spacing:-.01em; color:#000000}
+  .close-dialog{
+    width:34px; height:34px; display:grid; place-items:center; border-radius:999px;
+    background:#ffffff; border:1px solid #c9c9cf; color:#000000; -webkit-text-fill-color:#000000;
+    transition:background .15s;
+  }
+  .close-dialog:hover{background:#f5f5f7}
+  .close-dialog:focus-visible{outline:2px solid #000000; outline-offset:2px}
+    .hint{margin:0; color:#000000 !important; font-size:.84rem; line-height:1.6; -webkit-text-fill-color:#000000}
+    .dialog-body h2{color:#000000 !important; -webkit-text-fill-color:#000000}
+  textarea{
+    width:100%; min-height:clamp(160px,28vh,240px); resize:vertical; padding:12px 14px;
+    border-radius:12px; border:1px solid #c9c9cf; background:#ffffff !important; color:#000000 !important;
+    font:inherit; font-size:.9rem; line-height:1.7; outline:none; white-space:pre-wrap;
+  }
+  textarea::placeholder{color:#6b6b6b}
+  textarea:focus{border-color:#8f8f95}
+  .buttons{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+  .dialog-body .primary{padding:9px 16px; font-size:.86rem; color:#151515}
+  .dialog-body .secondary{padding:9px 16px; font-size:.86rem; color:#000000; background:#ffffff; border:1px solid #c9c9cf}
+  .dialog-body .status{display:block; margin:0; text-align:left; font-size:.8rem; color:#000000}
+  .dialog-body .status.error{color:#d62828}
+  dialog{
+    width:min(620px,calc(100vw - 26px)); max-height:min(88vh,900px); padding:0; overflow:hidden;
+    color:var(--ink); border:1px solid transparent; border-radius:26px;
+    background:linear-gradient(#101427,#0b0e1c) padding-box, linear-gradient(135deg,var(--violet),var(--pink),var(--lime)) border-box;
+    box-shadow:0 50px 140px -20px #000;
+  }
+  dialog::backdrop{background:#04050bd9; backdrop-filter:blur(12px) saturate(.7)}
+  dialog[open]{animation:pop .3s cubic-bezier(.2,.9,.3,1)}
+  .dialog-body{
+    display:flex; flex-direction:column; gap:14px; overflow:auto;
+    padding:clamp(18px,2.4vw,30px);
+  }
+  .dialog-head{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .dialog-head h2{margin:0; font-size:clamp(1.05rem,1.6vw,1.25rem); font-weight:900; letter-spacing:-.02em}
+  .close-dialog{
+    width:38px; height:38px; flex:none; display:grid; place-items:center; border-radius:12px;
+    background:#ffffff0d; border:1px solid #ffffff1f; color:var(--ink); font-size:1rem;
+    transition:background .18s, transform .18s, border-color .18s;
+  }
+  .close-dialog:hover{background:#ff3d9a22; border-color:#ff3d9a66; transform:rotate(90deg)}
+  .hint{margin:0; color:var(--muted); font-size:.84rem; line-height:1.6}
+  .hint strong{color:var(--lime)}
+  textarea{
+    width:100%; min-height:clamp(150px,26vh,230px); resize:vertical; padding:14px 16px;
+    border-radius:16px; border:1px solid var(--line); background:#080b16; color:var(--ink);
+    font:inherit; font-size:.86rem; line-height:1.65; outline:none;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  textarea::placeholder{color:#5b6484}
+  textarea:focus{border-color:var(--lime); box-shadow:0 0 0 4px #c9ff3d1a}
+  textarea::-webkit-scrollbar{width:10px}
+  textarea::-webkit-scrollbar-track{background:transparent}
+  textarea::-webkit-scrollbar-thumb{background:#2a3252; border-radius:999px; border:2px solid #080b16}
+  textarea::-webkit-scrollbar-thumb:hover{background:#3b4670}
+  .buttons{display:flex; gap:10px; flex-wrap:wrap}
+  .dialog-body .primary{flex:1; padding:14px 20px; font-size:.88rem; letter-spacing:.06em}
+  .dialog-body .secondary{flex:0 0 auto; padding:14px 20px; font-size:.86rem}
+  .dialog-body .status{margin:0; text-align:left; font-size:.8rem}}50%{transform:translateY(-6px) rotate(-4deg)}}50%{background-position:100% 50%}}to{transform:translateX(320%) rotate(18deg)}}to{opacity:1; transform:none}}to{opacity:1; transform:none}}
+  @media (max-width:1000px){
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .character{min-height:clamp(140px,18vh,190px)}
+  }
+  @media (max-width:520px){
+    .wrap{padding:14px 10px 18px}
+    .panel{border-radius:24px; padding:12px}
+    .subtitle{letter-spacing:.14em; font-size:.66rem}
+    h1{font-size:1.45rem}
+    .mark{width:42px; border-radius:14px}
+    .pill{display:none}
+    .grid{gap:8px}
+    .character{min-height:132px; border-radius:18px; padding:12px 8px; gap:6px}
+    .number{font-size:1.15rem; top:8px; left:10px}
+    .avatar{width:40px; border-radius:14px; font-size:20px}
+    .name{font-size:.95rem}
+    .swap{display:none}
+    .primary{padding:15px 24px; font-size:.9rem}
+    .secondary{padding:13px 18px; font-size:.82rem}
+  }}
 </style>
 </head>
 <body>
+
 <div class="wrap">
   <header>
-    <div class="brand">
-      <div class="mark">?</div>
-      <div><h1>Identidad secreta</h1></div>
+    <div class="gamebar">
+      <div class="gamebar-actions">
+        <button class="primary" id="playBtn">Jugar</button>
+        <button class="secondary" id="resetBtn">Nueva partida</button>
+        <button class="secondary" id="settingsBtn">Editar personajes</button>
+      </div>
+      <span class="count" id="counter">0 / 8</span>
     </div>
-    <button class="settings-toggle" id="settingsBtn"><span aria-hidden="true">⚙</span> Añadir personajes</button>
   </header>
 
   <main class="layout">
     <section class="panel board-panel">
+      <div class="board-head">
+        <h2>Personajes</h2>
+        <span class="count" id="counter2">0 / 8</span>
+      </div>
       <div class="grid" id="board">
-        <div class="empty">¿Preparado para jugar?<br>Pulsa <strong>JUGAR</strong> para revelar tus ocho identidades.</div>
+        <div class="empty">
+          <span>Pulsa <strong>JUGAR</strong> para repartir las 8 identidades.</span>
+        </div>
       </div>
-      <div class="buttons" style="justify-content:center; margin-top:20px">
-        <button class="primary" id="playBtn" style="flex:0 1 240px; padding:16px 24px; font-size:1.05rem; letter-spacing:.04em">JUGAR ✦</button>
-        <button class="secondary" id="resetBtn" title="Reinicia la partida">Nueva partida</button>
-      </div>
+      <p class="status" id="status" aria-live="polite"></p>
     </section>
   </main>
 
-  <dialog id="settingsDialog">
-    <div class="dialog-head">
-      <h2>⚙ Configuración de la partida</h2>
-      <button class="close-dialog" id="closeSettings" aria-label="Cerrar configuración">✕</button>
+  <dialog id="settingsDialog" style="color-scheme: light;">
+      <div class="dialog-head">
+        <h2>Editar personajes</h2>
+        <button class="close-dialog" id="closeSettings" aria-label="Cerrar">✕</button>
+      </div>
+      <p class="hint">Separados por comas. Se necesitan al menos 8 nombres diferentes.</p>
+      <textarea id="namesInput" spellcheck="false"></textarea>
+      <div class="buttons">
+        <button class="secondary" id="closeSettings2">Cancelar</button>
+        <button class="primary" id="saveSettings">Guardar</button>
+      </div>
+      <p class="status" id="settingsStatus" aria-live="polite"></p>
     </div>
-    <p class="hint">Añade o edita tu lista de personajes. Sepáralos con comas. Necesitas al menos ocho nombres diferentes.</p>
-    <textarea id="namesInput" placeholder="Ej.: La inventora, Capitán Niebla, Doctora Sol, El jardinero, ...">Antonio Recio, Amador Rivas, Coque Calatrava, Enrique Pastor, Berta Escobar, Maite Figueroa, Fermín Trujillo, Javi Maroto, Belén Esteban, David Broncano, El Gran Wyoming, Pablo Motos, Mercedes Milá, Jesús Vázquez, Roberto Leal, Arturo Valls, Torrente, El Risitas, Chiquito de la Calzada, Paquita Salas, Carlos Sobera, Andreu Buenafuente, Berto Romero, Homer Simpson, Bart Simpson, Peter Griffin, Walter White, Sheldon Cooper, Mr. Bean, Michael Scott, Wednesdays Addams, Daenerys Targaryen, Jon Snow, Rick Sánchez, Morty Smith, Sherlock Holmes, Doctor Who, Hannah Montana, El Chavo del Ocho, Batman, Joker, Superman, Spider-Man, Iron Man, Thanos, Darth Vader, Luke Skywalker, Yoda, Harry Potter, Voldemort, Hermione Granger, Frodo Bolsón, Gollum, Jack Sparrow, Indiana Jones, James Bond, Barbie, Terminator, Shrek, Asno, Fiona, Loquendo, El Zorro, Mortadelo, Filemón, Goku, Vegeta, Luffy, Naruto, Pikachu, Ash Ketchum, Doraemon, Shin-Chan, Nobita, Oliver Atom, Bob Esponja, Patricio Estrella, Mickey Mouse, Donald Duck, Bugs Bunny, Scooby-Doo, Tom, Jerry, Sonic, Mario Bros, Pedro Sánchez, Mariano Rajoy, José Luis Rodríguez Zapatero, José María Aznar, Felipe VI, Letizia Ortiz, Juan Carlos I, Santiago Abascal, Isabel Díaz Ayuso, Carles Puigdemont, Donald Trump, Joe Biden, Barack Obama, Vladimir Putin, Kim Jong-un, Emmanuel Macron, Adolf Hitler, Julio César, Cleopatra, Napoleón Bonaparte, Fidel Castro, Che Guevara, Francisco Franco, Isabel la Católica, Albert Einstein, Isaac Newton, Marie Curie, Galileo Galilei, Stephen Hawking, Leonardo da Vinci, Miguel de Cervantes, Don Quijote, Sancho Panza, William Shakespeare, Christóbal Colón, Charles Darwin, Sigmund Freud, Nikola Tesla, Thomas Edison, Steve Jobs, Rosalía, C. Tangana, Julio Iglesias, David Bisbal, Melendi, Joaquín Sabina, Quevedo, Aitana, Michael Jackson, Shakira, Freddie Mercury, Madonna, Beyoncé, Taylor Swift, Eminem, Bad Bunny, Pablo Picasso, Salvador Dalí, Vincent van Gogh, Wolfgang Amadeus Mozart, Ludwig van Beethoven, Lola Flores, Raphael, Ibai Llanos, Rafa Nadal, Fernando Alonso, Carlos Sainz, Pau Gasol, Marc Márquez, Ilian Topuria, Andrés Iniesta, Iker Casillas</textarea>
-    <div class="buttons">
-      <button class="primary" id="saveSettings">Guardar personajes</button>
-      <button class="secondary" id="closeSettings2">Cancelar</button>
-    </div>
-    <div class="status" id="settingsStatus" aria-live="polite">Los cambios se aplicarán al iniciar la próxima partida.</div>
   </dialog>
 </div>
 <script>
@@ -115,8 +284,11 @@
   const board = document.getElementById('board');
   const status = document.getElementById('status');
   const counter = document.getElementById('counter');
+  const counter2El = document.getElementById('counter2');
 
   const symbols = ['✦','◈','✺','⬟','❖','✧','☼','◇'];
+  const personajes_iniciales = "Antonio Recio, Amador Rivas, Coque Calatrava, Enrique Pastor, Berta Escobar, Maite Figueroa, Fermín Trujillo, Javi Maroto, Belén Esteban, David Broncano, El Gran Wyoming, Pablo Motos, Mercedes Milá, Jesús Vázquez, Roberto Leal, Arturo Valls, Torrente, El Risitas, Chiquito de la Calzada, Paquita Salas, Carlos Sobera, Andreu Buenafuente, Berto Romero, Homer Simpson, Bart Simpson, Peter Griffin, Walter White, Sheldon Cooper, Mr. Bean, Michael Scott, Wednesdays Addams, Daenerys Targaryen, Jon Snow, Rick Sánchez, Morty Smith, Sherlock Holmes, Doctor Who, Hannah Montana, El Chavo del Ocho, Batman, Joker, Superman, Spider-Man, Iron Man, Thanos, Darth Vader, Luke Skywalker, Yoda, Harry Potter, Voldemort, Hermione Granger, Frodo Bolsón, Gollum, Jack Sparrow, Indiana Jones, James Bond, Barbie, Terminator, Shrek, Asno, Fiona, Loquendo, El Zorro, Mortadelo, Filemón, Goku, Vegeta, Luffy, Naruto, Pikachu, Ash Ketchum, Doraemon, Shin-Chan, Nobita, Oliver Atom, Bob Esponja, Patricio Estrella, Mickey Mouse, Donald Duck, Bugs Bunny, Scooby-Doo, Tom, Jerry, Sonic, Mario Bros, Pedro Sánchez, Mariano Rajoy, José Luis Rodríguez Zapatero, José María Aznar, Felipe VI, Letizia Ortiz, Juan Carlos I, Santiago Abascal, Isabel Díaz Ayuso, Carles Puigdemont, Donald Trump, Joe Biden, Barack Obama, Vladimir Putin, Kim Jong-un, Emmanuel Macron, Adolf Hitler, Julio César, Cleopatra, Napoleón Bonaparte, Fidel Castro, Che Guevara, Francisco Franco, Isabel la Católica, Albert Einstein, Isaac Newton, Marie Curie, Galileo Galilei, Stephen Hawking, Leonardo da Vinci, Miguel de Cervantes, Don Quijote, Sancho Panza, William Shakespeare, Christóbal Colón, Charles Darwin, Sigmund Freud, Nikola Tesla, Thomas Edison, Steve Jobs, Rosalía, C. Tangana, Julio Iglesias, David Bisbal, Melendi, Joaquín Sabina, Quevedo, Aitana, Michael Jackson, Shakira, Freddie Mercury, Madonna, Beyoncé, Taylor Swift, Eminem, Bob Marley, Amy Winehouse, Adele, Luis Miguel, Raphael, Juan Gabriel, Celia Cruz, Benny Hill, Cantinflas, Paco Martinez Soria, José Mota, Cruz y Raya, Martes y 13, Les Luthiers";
+
   let used = new Set();
   let current = Array(8).fill(null);
   let pool = [];
@@ -143,28 +315,38 @@
       const card = document.createElement('button');
       card.type = 'button';
       card.className = 'character';
+      card.style.setProperty('--i', index);
       card.setAttribute('aria-label', `Posición ${index + 1}: ${name}. Pulsa para cambiar`);
       card.innerHTML = `<span class="number">${index + 1}</span><span class="avatar" aria-hidden="true">${symbols[index % symbols.length]}</span><span class="name"></span>`;
       card.querySelector('.name').textContent = name;
       card.addEventListener('click', () => swapCharacter(index));
       board.appendChild(card);
     });
-    counter.textContent = `${current.filter(Boolean).length} / 8 colocados`;
+    const count = current.filter(Boolean).length;
+    counter.textContent = `${count} / 8`;
+    if (counter2El) counter2El.textContent = `${count} / 8`;
     if (current.every(name => name === null)) {
-      board.innerHTML = '<div class="empty">¿Preparado para jugar?<br>Pulsa <strong>JUGAR</strong> para revelar tus ocho identidades.</div>';
+      board.innerHTML = '<div class="empty"><span>Pulsa <strong>JUGAR</strong> para repartir las 8 identidades.</span></div>';
     }
   }
   function swapCharacter(index) {
     const available = pool.filter(name => !used.has(name));
     if (available.length === 0) {
-      setStatus('¡Ya han salido todos los personajes de la lista! Pulsa «Nueva partida» para volver a empezar.', true);
+      setStatus('No quedan personajes en la lista.', true);
       return;
     }
     const next = available[Math.floor(Math.random() * available.length)];
     used.add(next);
     current[index] = next;
     render();
-    setStatus(`Posición ${index + 1} actualizada. ${used.size} personaje(s) usados en esta partida.`);
+    const card = board.children[index];
+    if (card && card.animate) {
+      card.animate(
+        [{ transform: 'scale(.98)' }, { transform: 'scale(1.01)' }, { transform: 'none' }],
+        { duration: 160, easing: 'ease-out' }
+      );
+    }
+    setStatus('');
   }
   function startGame() {
     const names = [...new Set(getNames())];
@@ -179,20 +361,30 @@
     current = shuffle(pool).slice(0, 8);
     current.forEach(name => used.add(name));
     render();
-    setStatus(`¡Partida lista! Ya han aparecido ${used.size} personajes. Pulsa cualquier etiqueta para cambiarla.`);
+    setStatus('');
   }
   function newGame() {
     used = new Set();
     current = Array(8).fill(null);
     pool = [];
     render();
-    setStatus('Registro reiniciado. Pulsa «JUGAR» para empezar otra partida.');
+    setStatus('');
   }
   function closeSettings() { settingsDialog.close(); }
-  settingsBtn.addEventListener('click', () => settingsDialog.showModal());
-  document.getElementById('closeSettings').addEventListener('click', closeSettings);
-  document.getElementById('closeSettings2').addEventListener('click', closeSettings);
-  document.getElementById('saveSettings').addEventListener('click', () => {
+  if (settingsBtn)   settingsBtn.addEventListener('click', () => {
+    if (!settingsDialog) return;
+    if (typeof settingsDialog.showModal === 'function') {
+      settingsDialog.showModal();
+    } else {
+      settingsDialog.setAttribute('open', '');
+    }
+  });
+  const close1 = document.getElementById('closeSettings');
+  const close2 = document.getElementById('closeSettings2');
+  const saveBtn = document.getElementById('saveSettings');
+  if (close1) close1.addEventListener('click', closeSettings);
+  if (close2) close2.addEventListener('click', closeSettings);
+  if (saveBtn) saveBtn.addEventListener('click', () => {
     const names = [...new Set(getNames())];
     if (names.length < 8) {
       settingsStatus.textContent = `Añade al menos 8 nombres diferentes. Ahora hay ${names.length}.`;
@@ -200,15 +392,23 @@
       return;
     }
     settingsStatus.classList.remove('error');
-    settingsStatus.textContent = `Lista preparada: ${names.length} personajes diferentes. Pulsa JUGAR para iniciar.`;
+    settingsStatus.textContent = `Lista preparada con ${names.length} personajes.`;
     closeSettings();
-    setStatus(`Lista preparada con ${names.length} personajes. Pulsa JUGAR para empezar.`);
   });
-  settingsDialog.addEventListener('click', (event) => {
-    if (event.target === settingsDialog) closeSettings();
-  });
-  playBtn.addEventListener('click', startGame);
-  resetBtn.addEventListener('click', newGame);
+  if (settingsDialog) {
+    settingsDialog.addEventListener('click', (event) => {
+      if (event.target === settingsDialog) closeSettings();
+    });
+  }
+  if (playBtn) playBtn.addEventListener('click', startGame);
+  if (resetBtn) resetBtn.addEventListener('click', newGame);
+
+  if (input && !input.value) {
+    input.value = personajes_iniciales;
+  }
+
+  if (playBtn) playBtn.onclick = startGame;
+  if (resetBtn) resetBtn.onclick = newGame;
   render();
 })();
 </script>
