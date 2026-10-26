@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eliminar duplicados</title>
+  <style>
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 16px;
+      color: #222;
+      background: #f5f6f8;
+    }
+    h1 { font-size: 1.7rem; }
+    label {
+      display: block;
+      font-weight: 700;
+      margin: 18px 0 7px;
+    }
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 130px;
+      box-sizing: border-box;
+      padding: 12px;
+      border: 1px solid #bbb;
+      border-radius: 8px;
+      font: 14px/1.5 Consolas, monospace;
+      resize: vertical;
+      background: white;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0;
+    }
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #1769d2;
+      color: white;
+    }
+    button.secondary { background: #4b5563; }
+    .status { margin: 12px 0; font-weight: 700; }
+    .hint { color: #555; font-size: .95rem; }
+  </style>
+</head>
+<body>
+  <h1>Eliminar duplicados</h1>
+  <p class="hint">Pega nombres separados por comas. La comparación ignora mayúsculas/minúsculas y espacios sobrantes; conserva la primera aparición y su escritura original.</p>
+
+  <label for="entrada">Lista original</label>
+  <textarea id="entrada" placeholder="Ejemplo: Ramón García, Matías Prats, Carlos Arguiñano, Ramón García"></textarea>
+
+  <div class="buttons">
+    <button id="procesar">Eliminar duplicados</button>
+    <button id="copiar" class="secondary">Copiar resultado</button>
+    <button id="limpiar" class="secondary">Limpiar todo</button>
+  </div>
+
+  <div id="estado" class="status" aria-live="polite"></div>
+
+  <label for="salida">Resultado sin duplicados</label>
+  <textarea id="salida" readonly placeholder="Aquí aparecerá la lista limpia"></textarea>
+
+  <label for="duplicados">Duplicados encontrados</label>
+  <textarea id="duplicados" readonly placeholder="Aquí aparecerán los nombres repetidos y el número de apariciones"></textarea>
+
+  <script>
+    const entrada = document.getElementById("entrada");
+    const salida = document.getElementById("salida");
+    const duplicados = document.getElementById("duplicados");
+    const estado = document.getElementById("estado");
+
+    function normalizar(nombre) {
+      return nombre.trim().replace(/\s+/g, " ").toLocaleLowerCase("es");
+    }
+
+    function eliminarDuplicados() {
+      // Divide por comas, elimina espacios sobrantes y descarta elementos vacíos.
+      const nombres = entrada.value
+        .split(",")
+        .map(nombre => nombre.trim().replace(/\s+/g, " "))
+        .filter(nombre => nombre.length > 0);
+
+      const vistos = new Map();
+      const unicos = [];
+      const conteos = new Map();
+
+      for (const nombre of nombres) {
+        const clave = normalizar(nombre);
+
+        if (vistos.has(clave)) {
+          conteos.set(clave, (conteos.get(clave) || 1) + 1);
+        } else {
+          vistos.set(clave, nombre);
+          unicos.push(nombre);
+        }
+      }
+
+      salida.value = unicos.join(", ");
+      duplicados.value = [...conteos.entries()]
+        .map(([clave, cantidad]) => `${vistos.get(clave)} — aparece ${cantidad} veces en total`)
+        .join("\n");
+
+      const totalRepeticiones = nombres.length - unicos.length;
+      estado.textContent =
+        `Nombres leídos: ${nombres.length} | Nombres únicos: ${unicos.length} | Repeticiones eliminadas: ${totalRepeticiones} | Nombres distintos duplicados: ${repetidos.size}`;
+    }
+
+    document.getElementById("procesar").addEventListener("click", eliminarDuplicados);
+
+    document.getElementById("copiar").addEventListener("click", async () => {
+      if (!salida.value) {
+        estado.textContent = "Primero pega una lista y pulsa «Eliminar duplicados».";
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(salida.value);
+        estado.textContent = "¡Lista sin duplicados copiada al portapapeles!";
+      } catch (error) {
+        // Alternativa para navegadores que no permiten Clipboard API en este contexto.
+        salida.focus();
+        salida.select();
+        const copiado = document.execCommand("copy");
+        estado.textContent = copiado
+          ? "¡Lista sin duplicados copiada al portapapeles!"
+          : "No se pudo copiar automáticamente. Selecciona el resultado y usa Ctrl+C.";
+      }
+    });
+
+    document.getElementById("limpiar").addEventListener("click", () => {
+      entrada.value = "";
+      salida.value = "";
+      duplicados.value = "";
+      estado.textContent = "";
+      entrada.focus();
+    });
+  </script>
+</body>
+</html>
